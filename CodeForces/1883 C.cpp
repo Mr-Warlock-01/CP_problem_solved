@@ -1,0 +1,133 @@
+#include<bits/stdc++.h>                                 //DRINK WATER
+
+#define int long long
+#define double long double
+#define endl "\n"
+
+#define all(x) x.begin(), x.end()
+#define rall(x) x.rbegin(), x.rend()
+#define uniq(x) (unique(x.begin(), x.end()) - x.begin())
+
+#define war() ios_base::sync_with_stdio(0);cin.tie(NULL);cout.tie(NULL);
+
+
+using namespace std;
+
+
+const double PI=acos(-1);
+
+int gcd (int a, int b) {if (b == 0){return a;} else{return gcd(b, a % b);}}
+int lcm (int a, int b) {return ((a / gcd(a, b)) * b);}
+
+
+
+
+///Debugger          ///Debugger          ///Debugger          ///Debugger          ///Debugger          ///Debugger          ///Debugger          ///Debugger          ///Debugger          ///Debugger
+#ifndef ONLINE_JUDGE
+#define db(x) cerr << #x <<" "; _print(x); cerr << endl;
+#else
+#define db(x)
+#endif
+void _print(int t) {cerr << "= { " << t << " }";}
+void _print(string t) {cerr << "= { " << t << " }";}
+void _print(char t) {cerr << "= { " << t << " }";}
+void _print(double t) {cerr << "= { " << t << " }";}
+void _print(bool x) {cerr << (x ? "= { true }" : "= { false }");}
+
+template <class T, class V> void _print(pair <T, V> p);
+template <class T> void _print(vector <T> v);
+template <class T> void _print(set <T> v);
+template <class T, class V> void _print(map <T, V> v);
+template <class T> void _print(multiset <T> v);
+template <class T, class V> void _print(pair <T, V> p) {cerr << "{"; _print(p.ff); cerr << ","; _print(p.ss); cerr << "}";}
+template <class T> void _print(vector <T> v) {cerr << "[ "; for (T i : v) {_print(i); cerr << " ";} cerr << "]";}
+template <class T> void _print(set <T> v) {cerr << "[ "; for (T i : v) {_print(i); cerr << " ";} cerr << "]";}
+template <class T> void _print(multiset <T> v) {cerr << "[ "; for (T i : v) {_print(i); cerr << " ";} cerr << "]";}
+template <class T, class V> void _print(map <T, V> v) {cerr << "[ "; for (auto i : v) {_print(i); cerr << " ";} cerr << "]";}
+
+template<typename T1, typename T2> istream &operator>>(istream &cin, pair<T1, T2> &a) { return cin >> a.first >> a.second; }
+template<typename T1> istream &operator>>(istream &cin, vector<T1> &a) { for (auto &x : a) cin >> x; return cin; }
+template<typename T1> istream &operator>>(istream &cin, valarray<T1> &a) { for (auto &x : a) cin >> x; return cin; }
+template<typename T1, typename T2> ostream &operator<<(ostream &cout, const pair<T1, T2> &a) { return cout << a.first << ' ' << a.second; }
+template<typename T1, typename T2> ostream &operator<<(ostream &cout, const vector<pair<T1, T2>> &a) { for (auto &x : a) cout << x << '\n'; return cout; }
+template<typename T1> ostream &operator<<(ostream &cout, const vector<T1> &a) { int n = a.size(); if (!n) return cout; cout << a[0]; for (int i = 1; i < n; i++) cout << ' ' << a[i]; return cout; }
+template<typename T1, typename T2> bool cmin(T1 &x, const T2 &y) { if (y < x) { x = y; return 1; } return 0; }
+template<typename T1, typename T2> bool cmax(T1 &x, const T2 &y) { if (x < y) { x = y; return 1; } return 0; }
+template<typename T1> vector<T1> range(T1 l, T1 r, T1 step = 1) { assert(step > 0); int n = (r - l + step - 1) / step, i; vector<T1> res(n); for (i = 0; i < n; i++) res[i] = l + step * i; return res; }
+template<typename T1> basic_string<T1> operator*(const basic_string<T1> &s, int m) { auto r = s; m *= s.size(); r.resize(m); for (int i = s.size(); i < m; i++) r[i] = r[i - s.size()]; return r; }
+///Debugger          ///Debugger          ///Debugger          ///Debugger          ///Debugger          ///Debugger          ///Debugger          ///Debugger          ///Debugger          ///Debugger
+
+
+int BS(int A[], int n, int x){
+    int l=0;
+    int r=n-1;
+    while(l<=r){
+        int mid=(l+r)/2;
+        if(A[mid]==x){return 1;}
+        else if(A[mid]<x){l=mid+1;}
+        else{r=mid-1;}
+    }
+    return 0;
+}
+
+
+
+signed main(){
+    //war();
+    int t;  cin>>t;
+    while(t--){
+        int n,k;    cin>>n>>k;
+        int arr[n]; for(int i=0; i<n; i++){cin>>arr[i];}
+        sort(arr,arr+n);
+
+        if(k==2){
+            if((BS(arr,n,2))==1){cout<<"0"<<endl;}
+            else if((BS(arr,n,4))==1){cout<<"0"<<endl;}
+            else if((BS(arr,n,6))==1){cout<<"0"<<endl;}
+            else if((BS(arr,n,8))==1){cout<<"0"<<endl;}
+            else if((BS(arr,n,10))==1){cout<<"0"<<endl;}
+            else{cout<<"1"<<endl;}
+        }
+
+        else if(k==3){
+            if((BS(arr,n,3))==1){cout<<"0"<<endl;}
+            else if((BS(arr,n,6))==1){cout<<"0"<<endl;}
+            else if((BS(arr,n,9))==1){cout<<"0"<<endl;}
+            else if((BS(arr,n,2))==1){cout<<"1"<<endl;}
+            else if((BS(arr,n,5))==1){cout<<"1"<<endl;}
+            else if((BS(arr,n,8))==1){cout<<"1"<<endl;}
+            else{cout<<"2"<<endl;}
+        }
+
+        else if(k==5){
+            if((BS(arr,n,5))==1){cout<<"0"<<endl;}
+            else if((BS(arr,n,10))==1){cout<<"0"<<endl;}
+            else if((BS(arr,n,4))==1){cout<<"1"<<endl;}
+            else if((BS(arr,n,9))==1){cout<<"1"<<endl;}
+            else if((BS(arr,n,3))==1){cout<<"2"<<endl;}
+            else if((BS(arr,n,8))==1){cout<<"2"<<endl;}
+            else if((BS(arr,n,2))==1){cout<<"3"<<endl;}
+            else if((BS(arr,n,7))==1){cout<<"3"<<endl;}
+            else{cout<<"4"<<endl;}
+        }
+        else{
+            if((BS(arr,n,4))==1){cout<<"0"<<endl;}
+            else if((BS(arr,n,8))==1){cout<<"0"<<endl;}
+            else{
+                int yasser=0,shamin=0;
+                bool ok=0;
+                for(int i=0; i<n; i++){
+                    if(arr[i]==2 || arr[i]==6 || arr[i]==10){   yasser++;}
+                    else if(arr[i]==3 || arr[i]==7){ok=1;}
+                    else if(arr[i]==1 || arr[i]==5 || arr[i]==9){   shamin++;   }
+                }
+                if(yasser>=2){cout<<"0"<<endl;}
+                else if(ok==1){cout<<"1"<<endl;}
+                else if(yasser==1 & shamin>=1){cout<<"1"<<endl;}
+                else if(shamin>=2){cout<<"2"<<endl;}
+                else{cout<<"3"<<endl;}
+            }
+        }
+    }
+return 0;
+}
