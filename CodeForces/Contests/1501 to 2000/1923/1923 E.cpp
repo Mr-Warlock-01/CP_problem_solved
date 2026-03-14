@@ -68,37 +68,62 @@ template<typename T1> istream &operator>>(istream &cin, vector<T1> &a) { for (au
 ///MAIN CODE            ///MAIN CODE            ///MAIN CODE            ///MAIN CODE            ///MAIN CODE            ///MAIN CODE            ///MAIN CODE            ///MAIN CODE            ///MAIN CODE
 
 #define int ll
-const int N=1e6+7;
+const int N=2e5+7;
+
+vector<int>graph[N];
+int color[N];
+map<int,int>mp[N];
+int par[N];
+int ans;
+
+void clr(int n){
+    for(int i=0; i<=n; i++){
+        graph[i].clear();
+        mp[i].clear(); 
+        par[i]=i;
+    }
+    ans=0;
+}
+
+
+
+
+int cal_merge(int a, int b, int c){
+    if(mp[a].size()<mp[b].size()){
+        swap(a,b);
+    }
+    for(auto [u,v]:mp[b]){
+        ans+=(v*mp[a][u]);
+        if(u!=c){mp[a][u]+=v;}
+        else{mp[a][u]=1;}
+    }
+    return a;
+}
+
+void dfs(int x, int p){
+    mp[par[x]][color[x]]=1;
+    for(int u:graph[x]){
+        if(p==u){continue;}
+        dfs(u,x);
+        par[x]=cal_merge(par[x],par[u],color[x]);
+    }
+    
+}
+
 
 
 void solve(int T){
-    int n,m,l;  cin>>n>>m>>l;
-    multiset<int>s;
-    for(int i=0; i<m; i++){
-        s.insert(0);
+    int n;  cin>>n;
+    clr(n+4);
+
+    for(int i=1; i<=n; i++){cin>>color[i];}
+    for(int i=1; i<n; i++){
+        int u,v;    cin>>u>>v;
+        graph[u].pb(v);
+        graph[v].pb(u);
     }
 
-    int last=0;
-    for(int i=1; i<=n; i++){
-        int a;  cin>>a;
-        int need=a-last;
-
-        int need_sz=n-i+2;
-        while(need_sz<(int)s.size()){
-            s.erase(s.begin());
-        }
-
-        for(int z=0; z<need; z++){
-            int val=*s.begin();
-            s.erase(s.begin());
-            s.insert(val+1);
-        }
-
-        s.erase(prev(s.end()));
-        s.insert(0);
-        last=a;
-    }
-    int ans=*s.rbegin()+l-last;
+    dfs(1,-1);
     cout<<ans<<endl;
 } 
 

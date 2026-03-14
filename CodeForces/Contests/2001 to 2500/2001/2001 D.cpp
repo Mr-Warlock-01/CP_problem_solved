@@ -68,38 +68,118 @@ template<typename T1> istream &operator>>(istream &cin, vector<T1> &a) { for (au
 ///MAIN CODE            ///MAIN CODE            ///MAIN CODE            ///MAIN CODE            ///MAIN CODE            ///MAIN CODE            ///MAIN CODE            ///MAIN CODE            ///MAIN CODE
 
 #define int ll
-const int N=1e6+7;
+const int N=3e5+7;
 
+int arr[N];
+int taken[N];
+int last[N];
+
+stack<int>st[N];
+
+int treee_mn[4*N];
+int treee_mx[4*N];
+int cnt[4*N];
+
+void build(int node, int st, int en){
+    if(st==en){  treee_mx[node]=treee_mn[node] = arr[st]; 
+    cnt[node]=(st==last[arr[st]]);  
+    return;}
+    int mid=((en-st)/2)+st;
+    build(2*node, st, mid);
+    build(2*node+1, mid+1, en);
+    treee_mn[node]=min(treee_mn[2*node],treee_mn[2*node+1]);
+    treee_mx[node]=max(treee_mx[2*node],treee_mx[2*node+1]);
+    cnt[node]=cnt[2*node]+cnt[2*node+1];
+    return;
+}
+
+int mn_query(int node, int st, int en, int l, int r){
+    if(st>r || en<l){return LLMax;}
+    else if(st>=l && en<=r){return treee_mn[node];}
+    int mid=((en-st)/2)+st;
+    int q1= mn_query(2*node, st, mid, l, r);
+    int q2= mn_query(2*node+1, mid+ 1, en, l, r);
+    return min(q1,q2);
+}
+
+int mx_query(int node, int st, int en, int l, int r){
+    if(st>r || en<l){return 0;}
+    else if(st>=l && en<=r){return treee_mx[node];}
+    int mid=((en-st)/2)+st;
+    int q1= mx_query(2*node, st, mid, l, r);
+    int q2= mx_query(2*node+1, mid+ 1, en, l, r);
+    return max(q1,q2);
+}
+
+void del(int node, int st, int en, int ind){
+    if(st==en){
+        treee_mx[node]=0;
+        treee_mn[node]=LLMax;
+        cnt[node]=0;   
+        return;
+    }
+    int mid=((en-st)/2)+st;
+    if(st<=ind && mid>=ind){del(2*node,st, mid, ind);}
+    else{del(2*node+1, mid+1, en, ind);}
+    treee_mn[node]=min(treee_mn[2*node],treee_mn[2*node+1]);
+    treee_mx[node]=max(treee_mx[2*node],treee_mx[2*node+1]);
+    cnt[node]=cnt[2*node]+cnt[2*node+1];
+    return;
+}
+
+int find_left_most_uniq(int node, int st, int en){
+    if(st==en){return st;}
+    int mid=((en-st)/2)+st;
+    if(cnt[2*node]!=0){
+        return find_left_most_uniq(2*node, st, mid);
+    }
+    else{
+        return find_left_most_uniq(2*node+1, mid+1, en);
+    }
+}
 
 void solve(int T){
-    int n,m,l;  cin>>n>>m>>l;
-    multiset<int>s;
-    for(int i=0; i<m; i++){
-        s.insert(0);
+    int n;  cin>>n;
+    for(int i=1; i<=n; i++){cin>>arr[i];}
+    for(int i=n; i>0; i--){
+        if(st[arr[i]].empty()){
+            last[arr[i]]=i;
+        }
+        st[arr[i]].push(i);
     }
 
-    int last=0;
-    for(int i=1; i<=n; i++){
-        int a;  cin>>a;
-        int need=a-last;
-
-        int need_sz=n-i+2;
-        while(need_sz<(int)s.size()){
-            s.erase(s.begin());
+    build(1,1,n);
+    vector<int>ans;
+    int l=1;
+    bool need=1;    //1=mx,0=mn
+    while(l<=n){
+        if(cnt[1]==0){break;}
+        int r=find_left_most_uniq(1, 1, n);
+        int val;
+        if(need){
+            val=mx_query(1, 1, n, l, r);
         }
-
-        for(int z=0; z<need; z++){
-            int val=*s.begin();
-            s.erase(s.begin());
-            s.insert(val+1);
+        else{
+            val=mn_query(1, 1, n, l, r);
         }
+        ans.pb(val);
+        bool done=0;
+        while(!st[val].empty()){
+            if(!done && st[val].top()>=l){
+                done=1; l=st[val].top();
+            }
+            del(1,1,n,st[val].top());
+            st[val].pop();
+        }
+        l++;
+        need^=1;
 
-        s.erase(prev(s.end()));
-        s.insert(0);
-        last=a;
     }
-    int ans=*s.rbegin()+l-last;
-    cout<<ans<<endl;
+    
+    cout<<(int)ans.size()<<endl;   
+    for(int u:ans){
+        cout<<u<<" ";
+    }cout<<endl;
 } 
 
 
